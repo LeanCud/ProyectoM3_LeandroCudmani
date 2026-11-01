@@ -13,13 +13,14 @@
 <body>
   <header class="site-header" id="inicio">
     <div class="header-inner">
-      <a class="brand" href="#inicio" aria-label="La Perla Negra, ir al inicio">
+      <a class="brand" href="/inicio" data-route="/inicio">
         <span class="brand-mark" aria-hidden="true">✦</span>
         <span class="brand-copy">
           <span class="brand-name">El Perla Negra</span>
           <span class="brand-caption">Bitácora de un capitán</span>
         </span>
       </a>
+
       <nav class="nav" aria-label="Navegación principal">
         <a href="/inicio" data-route="/inicio">Inicio</a>
         <a href="/chat" data-route="/chat">Chat</a>
@@ -28,48 +29,8 @@
     </div>
   </header>
 
-  <main>
-    <section class="hero" aria-labelledby="hero-title">
-      <figure class="hero-portrait">
-        <img src="./img/Home-img.jpg" alt="El capitán Jack Sparrow listo para zarpar">
-        <figcaption class="portrait-caption">
-          <span class="status-dot" aria-hidden="true"></span>
-          <span>En alta mar · Caribe</span>
-        </figcaption>
-      </figure>
-
-      <div class="hero-copy" id="chat">
-        <p class="eyebrow"><span aria-hidden="true">✦</span> Ron · Rumbo · Leyenda</p>
-        <h1 id="hero-title">Las mejores historias empiezan <em>en alta mar.</em></h1>
-        <p class="hero-description">
-          El capitán Jack Sparrow tiene un mapa, mil aventuras y una respuesta para todo.
-          Bueno… casi todo. ¿Te atreves a preguntarle?
-        </p>
-        <a class="chat-button" href="#chat">
-          <span>Hablar con el capitán</span>
-          <span class="button-arrow" aria-hidden="true">↗</span>
-        </a>
-        <p class="hero-note"><span aria-hidden="true">✧</span> No hace falta tener experiencia navegando.</p>
-      </div>
-    </section>
-
-    <section class="chat">
-
-    </section>
-
-
-
-    <!-- <section class="Acerca-de">
-      <h1>Acerca de</h1>
-      <p>Single Page Application para conversar con "El Capitan Jack Sparrow".
-        Las respuestas las genera Google Gemini a traves de una Vercel Serverless Function, de modo que la APIKey nunca llegue al navegador.
-      </p>
-      <p>
-        La informacion de la conversacion se guarda mientras la pagina siga abierta. Si se recarga la pagina, tendras que volver a repetir la conversacion con el capitan.
-      </p>
-      <h2>Tecnologias</h2>
-      <p>HTML, CSS, JavaScript, History API, Gemini API, Vercel, Vitest</p>
-    </section> -->
+  <main id="app">
+    <!-- app.js renderiza aquí la vista según la URL -->
   </main>
 
   <footer class="site-footer">
