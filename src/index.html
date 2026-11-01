@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#11100f">
   <meta name="description" content="Sube a bordo y conversa con el capitán Jack Sparrow." />
   <title>El Perla Negra | Conversa con el capitán</title>
-  <link rel="icon" href="./img/jack-sparrow-logo-png_seeklogo-308991.png" type="image/png">
+  <link rel="icon" href="./img/logopag.png" type="image/png">
   <link rel="stylesheet" href="./style.css">
   <script type="module" src="./app.js"></script>
 </head>
@@ -16,14 +16,14 @@
       <a class="brand" href="#inicio" aria-label="La Perla Negra, ir al inicio">
         <span class="brand-mark" aria-hidden="true">✦</span>
         <span class="brand-copy">
-          <span class="brand-name">La Perla Negra</span>
+          <span class="brand-name">El Perla Negra</span>
           <span class="brand-caption">Bitácora de un capitán</span>
         </span>
       </a>
       <nav class="nav" aria-label="Navegación principal">
-        <a href="#inicio">Inicio</a>
-        <a href="#chat">Chat</a>
-        <a href="#acerca-de">Acerca de</a>
+        <a href="/inicio" data-route="/inicio">Inicio</a>
+        <a href="/chat" data-route="/chat">Chat</a>
+        <a href="/acerca-de" data-route="/acerca-de">Acerca de</a>
       </nav>
     </div>
   </header>
@@ -52,9 +52,27 @@
         <p class="hero-note"><span aria-hidden="true">✧</span> No hace falta tener experiencia navegando.</p>
       </div>
     </section>
+
+    <section class="chat">
+
+    </section>
+
+
+
+    <!-- <section class="Acerca-de">
+      <h1>Acerca de</h1>
+      <p>Single Page Application para conversar con "El Capitan Jack Sparrow".
+        Las respuestas las genera Google Gemini a traves de una Vercel Serverless Function, de modo que la APIKey nunca llegue al navegador.
+      </p>
+      <p>
+        La informacion de la conversacion se guarda mientras la pagina siga abierta. Si se recarga la pagina, tendras que volver a repetir la conversacion con el capitan.
+      </p>
+      <h2>Tecnologias</h2>
+      <p>HTML, CSS, JavaScript, History API, Gemini API, Vercel, Vitest</p>
+    </section> -->
   </main>
 
-  <footer class="site-footer" id="acerca-de">
+  <footer class="site-footer">
     <span class="footer-rule" aria-hidden="true"></span>
     <p>Un viaje extraordinario comienza con una buena pregunta.</p>
     <small>Proyecto Leandro Cudmani · 2026 &copy;</small>
