@@ -1,11 +1,36 @@
 const app = document.querySelector("#app");
+const homeImageUrl = new URL("./img/Home-img.jpg", import.meta.url).href;
+
+const routes = {
+  "/": renderHome,
+  "/inicio": renderHome,
+  "/chat": renderChat,
+  "/acerca-de": renderAbout,
+};
+
+function renderRoute() {
+  const render = routes[window.location.pathname];
+
+  if (!render) {
+    app.innerHTML = `
+      <section class="not-found">
+        <h1>Página no encontrada</h1>
+        <a href="/inicio" data-route="/inicio">Volver al inicio</a>
+      </section>
+    `;
+    return;
+  }
+
+  render();
+  updateActiveLink(window.location.pathname);
+}
 
 function renderHome() {
   app.innerHTML = `
     <section class="hero" aria-labelledby="hero-title">
       <figure class="hero-portrait">
         <img
-          src="./img/Home-img.jpg"
+          src="${homeImageUrl}"
           alt="Un capitán listo para zarpar"
         >
         <figcaption class="portrait-caption">
@@ -75,6 +100,8 @@ function renderChat() {
       </form>
     </section>
   `;
+
+  initChat();
 }
 
 function renderAbout() {
@@ -96,4 +123,41 @@ function renderAbout() {
       </ul>
     </section>
   `;
+}
+
+// function renderRoute() {
+//   const path = window.location.pathname;
+
+//   if (path === "/chat") {
+//     renderChat();
+//   } else if (path === "/acerca-de") {
+//     renderAbout();
+//   } else {
+//     renderHome();
+//   }
+
+
+document.addEventListener("click", (event) => {
+  const link = event.target.closest("a[data-route]");
+
+  if (!link || event.defaultPrevented) return;
+  if (link.origin !== window.location.origin) return;
+  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey) return;
+
+  event.preventDefault();
+  history.pushState({}, "", link.href);
+  renderRoute();
+});
+
+window.addEventListener("popstate", renderRoute);
+renderRoute();
+
+function updateActiveLink(path) {
+  document.querySelectorAll(".nav [data-route]").forEach((link) => {
+    if (link.getAttribute("href") === path) {
+      link.setAttribute("aria-current", "page");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  });
 }
