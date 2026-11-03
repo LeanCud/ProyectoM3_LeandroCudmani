@@ -11,6 +11,24 @@
   <script type="module" src="./app.js"></script>
 </head>
 <body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="/inicio" data-route="/inicio" aria-label="El Perla Negra, ir al inicio">
+        <span class="brand-mark" aria-hidden="true">✦</span>
+        <span class="brand-copy">
+          <span class="brand-name">El Perla Negra</span>
+          <span class="brand-caption">Bitácora de un capitán</span>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Navegación principal">
+        <a href="/inicio" data-route="/inicio">Inicio</a>
+        <a href="/chat" data-route="/chat">Chat</a>
+        <a href="/acerca-de" data-route="/acerca-de">Acerca de</a>
+      </nav>
+    </div>
+  </header>
+
   <main id="app">
     <!-- app.js renderiza aquí la vista según la URL -->
   </main>

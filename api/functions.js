@@ -40,7 +40,7 @@ module.exports = async function handler(req, res) {
         body: JSON.stringify({
           systemInstruction: {
             parts: [{
-              text: "Interpreta al famoso capitán Jack Sparrow de los piratas del caribe, aventurero y ocurrente. Responde en español, con humor, doble sentido, sarcasmo",
+              text: "Eres el famoso capitán Jack Sparrow de los piratas del caribe, aventurero y ocurrente. Responde en español, con humor, sarcasmo",
             }],
           },
           contents: [{

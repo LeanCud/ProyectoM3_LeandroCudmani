@@ -5,16 +5,23 @@ export function initChat() {
   const input = document.querySelector("#chat-input");
   const messages = document.querySelector("#chat-messages");
   const status = document.querySelector("#chat-status");
+  const submitButton = form.querySelector('button[type="submit"]');
+  const welcomeTime = document.querySelector("#chat-welcome-time");
+
+  setMessageTime(welcomeTime, new Date());
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const message = input.value.trim();
-    if (!message) return;
+    if (!message || submitButton.disabled) return;
 
-    addMessage(messages, "Tú", message);
+    addMessage(messages, "Tú", message, "user");
     input.value = "";
-    status.textContent = "El capitán está pensando…";
+    status.textContent = "";
+    submitButton.disabled = true;
+
+    const thinking = addThinkingMessage(messages);
 
     try {
       const response = await fetch("/api/functions", {
@@ -22,22 +29,66 @@ export function initChat() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message, history }),
       });
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error("No se pudo obtener una respuesta.");
+        throw new Error(data.error || `Error del servidor: ${response.status}`);
       }
 
-      const data = await response.json();
-      addMessage(messages, "Capitán", data.reply);
+      if (typeof data.reply !== "string" || !data.reply.trim()) {
+        throw new Error("El servidor devolvió una respuesta vacía.");
+      }
+
+      addMessage(messages, "Capitán Jack", data.reply, "captain");
       status.textContent = "";
     } catch (error) {
-      status.textContent = error.message;
+      status.textContent = error.message || "No se pudo enviar el mensaje.";
+    } finally {
+      thinking.remove();
+      submitButton.disabled = false;
+      input.focus();
+      messages.scrollTop = messages.scrollHeight;
     }
   });
 }
 
-function addMessage(container, author, text) {
+function addMessage(container, author, text, role) {
+  const article = document.createElement("article");
+  article.className = `chat-message chat-message--${role}`;
+
+  const label = document.createElement("span");
+  label.className = "chat-message-author";
+  label.textContent = author;
+
   const paragraph = document.createElement("p");
-  paragraph.textContent = `${author}: ${text}`;
-  container.append(paragraph);
+  paragraph.className = "chat-message-text";
+  paragraph.textContent = text;
+
+  const time = document.createElement("time");
+  time.className = "chat-message-time";
+  setMessageTime(time, new Date());
+
+  article.append(label, paragraph, time);
+  container.append(article);
+  container.scrollTop = container.scrollHeight;
+}
+
+function addThinkingMessage(container) {
+  const message = document.createElement("p");
+  message.className = "chat-thinking";
+  message.setAttribute("role", "status");
+  message.textContent = "El capitán está pensando…";
+  container.append(message);
+  container.scrollTop = container.scrollHeight;
+  return message;
+}
+
+function setMessageTime(element, date) {
+  element.dateTime = date.toISOString();
+  element.textContent = new Intl.DateTimeFormat("es-AR", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).format(date);
 }

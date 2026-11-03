@@ -1,5 +1,8 @@
+import { initChat } from "./chat.js";
+
 const app = document.querySelector("#app");
 const homeImageUrl = new URL("./img/Home-img.jpg", import.meta.url).href;
+
 
 const routes = {
   "/src/index.html": renderHome,
@@ -78,10 +81,12 @@ function renderChat() {
         aria-live="polite"
         aria-label="Conversación"
       >
-        <p class="chat-welcome">
-          muy buenos días, tardes o la hora imprecisa que sea
-          Jack Sparrow, a su entera y dudosa disposición... aunque mis amigos, y aquellos que pronto lamentarán haberme cruzado, suelen llamarme "Capitan Jack Sparrow". Tienes un poco de ron? sino vete por donde viniste
-        </p>
+        <article class="chat-message chat-message--captain chat-welcome">
+          <p class="chat-message-text">
+            Muy buenos días, tardes o la hora imprecisa que sea. El capitán está a tu disposición. ¿Qué aventura te trae por estos mares?
+          </p>
+          <time class="chat-message-time" id="chat-welcome-time"></time>
+        </article>
       </div>
 
       <form class="chat-form" id="chat-form">
@@ -126,16 +131,6 @@ function renderAbout() {
   `;
 }
 
-// function renderRoute() {
-//   const path = window.location.pathname;
-
-//   if (path === "/chat") {
-//     renderChat();
-//   } else if (path === "/acerca-de") {
-//     renderAbout();
-//   } else {
-//     renderHome();
-//   }
 
 
 document.addEventListener("click", (event) => {
