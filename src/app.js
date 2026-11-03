@@ -90,7 +90,7 @@ function renderChat() {
         </article>
       </div>
 
-      <form class="chat-form" id="chat-form">
+      <form class="chat-form" id="chat-form" autocomplete="off">
         <label for="chat-input">Tu mensaje</label>
         <div class="chat-form-controls">
           <input
@@ -99,6 +99,7 @@ function renderChat() {
             type="text"
             maxlength="500"
             placeholder="Escribe tu pregunta..."
+            autocomplete="off"
             required
           >
           <button type="submit">Enviar</button>

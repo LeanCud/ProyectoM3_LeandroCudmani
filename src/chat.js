@@ -8,7 +8,14 @@ export function initChat() {
   const submitButton = form.querySelector('button[type="submit"]');
   const welcomeTime = document.querySelector("#chat-welcome-time");
 
-  setMessageTime(welcomeTime, new Date());
+  if (welcomeTime) {
+    setMessageTime(welcomeTime, new Date());
+  }
+
+  // Recupera los mensajes si se navegó a otra vista y se volvió al chat.
+  history.forEach(({ author, text, role, time }) => {
+    addMessage(messages, author, text, role, new Date(time));
+  });
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -16,7 +23,15 @@ export function initChat() {
     const message = input.value.trim();
     if (!message || submitButton.disabled) return;
 
-    addMessage(messages, "Tú", message, "user");
+    const sentAt = new Date();
+    history.push({
+      author: "Tú",
+      text: message,
+      role: "user",
+      time: sentAt.toISOString(),
+    });
+    addMessage(messages, "Tú", message, "user", sentAt);
+
     input.value = "";
     status.textContent = "";
     submitButton.disabled = true;
@@ -39,8 +54,14 @@ export function initChat() {
         throw new Error("El servidor devolvió una respuesta vacía.");
       }
 
-      addMessage(messages, "Capitán Jack", data.reply, "captain");
-      status.textContent = "";
+      const receivedAt = new Date();
+      history.push({
+        author: "Capitán Jack",
+        text: data.reply,
+        role: "captain",
+        time: receivedAt.toISOString(),
+      });
+      addMessage(messages, "Capitán Jack", data.reply, "captain", receivedAt);
     } catch (error) {
       status.textContent = error.message || "No se pudo enviar el mensaje.";
     } finally {
@@ -52,7 +73,7 @@ export function initChat() {
   });
 }
 
-function addMessage(container, author, text, role) {
+function addMessage(container, author, text, role, date) {
   const article = document.createElement("article");
   article.className = `chat-message chat-message--${role}`;
 
@@ -66,7 +87,7 @@ function addMessage(container, author, text, role) {
 
   const time = document.createElement("time");
   time.className = "chat-message-time";
-  setMessageTime(time, new Date());
+  setMessageTime(time, date);
 
   article.append(label, paragraph, time);
   container.append(article);
