@@ -2,7 +2,7 @@ const app = document.querySelector("#app");
 const homeImageUrl = new URL("./img/Home-img.jpg", import.meta.url).href;
 
 const routes = {
-  "/": renderHome,
+  "/src/index.html": renderHome,
   "/inicio": renderHome,
   "/chat": renderChat,
   "/acerca-de": renderAbout,
@@ -79,7 +79,8 @@ function renderChat() {
         aria-label="Conversación"
       >
         <p class="chat-welcome">
-          ¡Ahoy! ¿Qué quieres saber, grumete?
+          muy buenos días, tardes o la hora imprecisa que sea
+          Jack Sparrow, a su entera y dudosa disposición... aunque mis amigos, y aquellos que pronto lamentarán haberme cruzado, suelen llamarme "Capitan Jack Sparrow". Tienes un poco de ron? sino vete por donde viniste
         </p>
       </div>
 
