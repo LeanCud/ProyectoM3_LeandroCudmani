@@ -5,6 +5,7 @@ const homeImageUrl = new URL("./img/Home-img.jpg", import.meta.url).href;
 
 
 const routes = {
+  "/": renderHome,
   "/src/index.html": renderHome,
   "/inicio": renderHome,
   "/chat": renderChat,
@@ -18,7 +19,7 @@ function renderRoute() {
     app.innerHTML = `
       <section class="not-found">
         <h1>Página no encontrada</h1>
-        <a href="/inicio" data-route="/inicio">Volver al inicio</a>
+        <a href="/" data-route="/">Volver al inicio</a>
       </section>
     `;
     return;
