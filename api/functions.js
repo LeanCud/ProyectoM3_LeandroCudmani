@@ -81,16 +81,8 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    const parts = data?.candidates?.[0]?.content?.parts;
-    if (!Array.isArray(parts)) {
-      console.error("Gemini devolvió una respuesta con formato inesperado.");
-      return res.status(502).json({
-        error: "Gemini devolvió una respuesta inválida.",
-      });
-    }
-
-    const reply = parts
-      .map((part) => typeof part?.text === "string" ? part.text : "")
+    const reply = data.candidates?.[0]?.content?.parts
+      ?.map((part) => part.text ?? "")
       .join("")
       .trim();
 
