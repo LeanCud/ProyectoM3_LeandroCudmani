@@ -12,7 +12,7 @@ const routes = {
   "/acerca-de": renderAbout,
 };
 
-function renderRoute() {
+export function renderRoute() {
   const render = routes[window.location.pathname];
 
   if (!render) {
@@ -22,6 +22,7 @@ function renderRoute() {
         <a href="/" data-route="/">Volver al inicio</a>
       </section>
     `;
+    updateActiveLink(null);
     return;
   }
 

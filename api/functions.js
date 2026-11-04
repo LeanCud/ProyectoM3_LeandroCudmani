@@ -6,8 +6,8 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: "Método no permitido." });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY;
-  const model = process.env.GEMINI_MODEL;
+  const apiKey = process.env.GEMINI_API_KEY?.trim();
+  const model = process.env.GEMINI_MODEL?.trim();
 
   if (!apiKey || !model) {
     console.error("Faltan GEMINI_API_KEY o GEMINI_MODEL.");
@@ -16,9 +16,13 @@ module.exports = async function handler(req, res) {
     });
   }
 
-  const message = req.body?.message;
+  if (!req.body || typeof req.body !== "object" || Array.isArray(req.body)) {
+    return res.status(400).json({ error: "El cuerpo de la solicitud debe ser un objeto JSON." });
+  }
 
-  if (typeof message !== "string" || !message.trim()) {
+  const message = req.body.message;
+
+  if (typeof message !== "string") {
     return res.status(400).json({ error: "Escribe un mensaje." });
   }
 
@@ -26,6 +30,11 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({
       error: `El mensaje no puede superar los ${MAX_MESSAGE_LENGTH} caracteres.`,
     });
+  }
+
+  const normalizedMessage = message.trim();
+  if (!normalizedMessage) {
+    return res.status(400).json({ error: "Escribe un mensaje." });
   }
 
   try {
@@ -45,7 +54,7 @@ module.exports = async function handler(req, res) {
           },
           contents: [{
             role: "user",
-            parts: [{ text: message.trim() }],
+            parts: [{ text: normalizedMessage }],
           }],
           generationConfig: {
             maxOutputTokens: 500,
@@ -55,7 +64,15 @@ module.exports = async function handler(req, res) {
       },
     );
 
-    const data = await geminiResponse.json();
+    let data;
+    try {
+      data = await geminiResponse.json();
+    } catch (error) {
+      console.error("Gemini devolvió JSON inválido:", error);
+      return res.status(502).json({
+        error: "Gemini devolvió una respuesta inválida.",
+      });
+    }
 
     if (!geminiResponse.ok) {
       console.error("Gemini respondió con error:", geminiResponse.status, data);
@@ -64,8 +81,16 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    const reply = data.candidates?.[0]?.content?.parts
-      ?.map((part) => part.text ?? "")
+    const parts = data?.candidates?.[0]?.content?.parts;
+    if (!Array.isArray(parts)) {
+      console.error("Gemini devolvió una respuesta con formato inesperado.");
+      return res.status(502).json({
+        error: "Gemini devolvió una respuesta inválida.",
+      });
+    }
+
+    const reply = parts
+      .map((part) => typeof part?.text === "string" ? part.text : "")
       .join("")
       .trim();
 

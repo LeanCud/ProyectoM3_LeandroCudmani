@@ -1,12 +1,20 @@
 const history = [];
+const MAX_MESSAGE_LENGTH = 500;
 
 export function initChat() {
   const form = document.querySelector("#chat-form");
   const input = document.querySelector("#chat-input");
   const messages = document.querySelector("#chat-messages");
   const status = document.querySelector("#chat-status");
+  if (!form || !input || !messages || !status) {
+    throw new Error("No se encontró la interfaz necesaria para iniciar el chat.");
+  }
+
   const submitButton = form.querySelector('button[type="submit"]');
   const welcomeTime = document.querySelector("#chat-welcome-time");
+  if (!submitButton) {
+    throw new Error("No se encontró el botón para enviar mensajes.");
+  }
 
   if (welcomeTime) {
     setMessageTime(welcomeTime, new Date());
@@ -21,7 +29,17 @@ export function initChat() {
     event.preventDefault();
 
     const message = input.value.trim();
-    if (!message || submitButton.disabled) return;
+    if (submitButton.disabled) return;
+    if (!message) {
+      status.textContent = "Escribe un mensaje antes de enviarlo.";
+      input.focus();
+      return;
+    }
+    if (message.length > MAX_MESSAGE_LENGTH) {
+      status.textContent = `El mensaje no puede superar los ${MAX_MESSAGE_LENGTH} caracteres.`;
+      input.focus();
+      return;
+    }
 
     const sentAt = new Date();
     history.push({
@@ -44,7 +62,16 @@ export function initChat() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message, history }),
       });
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        throw new Error("El servidor devolvió una respuesta inválida.");
+      }
+
+      if (!data || typeof data !== "object" || Array.isArray(data)) {
+        throw new Error("El servidor devolvió una respuesta inválida.");
+      }
 
       if (!response.ok) {
         throw new Error(data.error || `Error del servidor: ${response.status}`);
@@ -63,7 +90,9 @@ export function initChat() {
       });
       addMessage(messages, "Capitán Jack", data.reply, "captain", receivedAt);
     } catch (error) {
-      status.textContent = error.message || "No se pudo enviar el mensaje.";
+      status.textContent = error instanceof Error
+        ? error.message
+        : "No se pudo enviar el mensaje.";
     } finally {
       thinking.remove();
       submitButton.disabled = false;
